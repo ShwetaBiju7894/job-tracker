@@ -35,88 +35,97 @@ export default function Register() {
     setLoading(true);
     try {
       await register(form.name, form.email, form.password);
-      toast.success('Account created! Welcome to JobTrackr 🎉');
+      toast.success('Welcome to JobTrackr! 🎉');
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed. Please try again.');
+      toast.error(err.response?.data?.message || 'Registration failed');
     } finally { setLoading(false); }
   };
 
   const getStrength = () => {
     const p = form.password;
     if (!p)           return { width: '0%',   color: 'transparent', label: '' };
-    if (p.length < 6) return { width: '25%',  color: 'var(--danger)',  label: 'Too short' };
-    if (p.length < 8) return { width: '50%',  color: 'var(--warning)', label: 'Weak' };
+    if (p.length < 6) return { width: '25%',  color: '#DC2626',  label: 'Too short' };
+    if (p.length < 8) return { width: '50%',  color: '#D97706',  label: 'Weak' };
     if (!/[A-Z]/.test(p) || !/[0-9]/.test(p))
-                      return { width: '75%',  color: 'var(--primary)', label: 'Good' };
-    return             { width: '100%', color: 'var(--success)', label: 'Strong' };
+                      return { width: '75%',  color: '#166534',  label: 'Good' };
+    return             { width: '100%', color: '#14532D', label: 'Strong' };
   };
 
   const strength = getStrength();
 
   return (
-    <div className="auth-wrapper">
-      <div className="auth-left">
-        <div className="auth-brand">
-          <div className="auth-logo">
-            <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                <polyline points="14,2 14,8 20,8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-              </svg>
-            </div>
-            <span>JobTrackr</span>
+    <div className="auth-page">
+      {/* Top bar */}
+      <div className="auth-topbar">
+        <div className="auth-topbar-logo">
+          <div className="auth-topbar-logo-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+            </svg>
           </div>
-          <h1>Land your dream job faster</h1>
-          <p>Join job seekers who use JobTrackr to stay organized, prepared, and confident throughout their job search.</p>
-          <div className="auth-features">
-            <div className="auth-feature">
-              <div className="auth-feature-icon">🎯</div>
-              <div><strong>Track Everything</strong><span>Never lose track of an application again</span></div>
-            </div>
-            <div className="auth-feature">
-              <div className="auth-feature-icon">✍️</div>
-              <div><strong>AI Cover Letters</strong><span>Get tailored tips for every job description</span></div>
-            </div>
-            <div className="auth-feature">
-              <div className="auth-feature-icon">📈</div>
-              <div><strong>Search Analytics</strong><span>Understand what's working in your search</span></div>
-            </div>
-          </div>
+          JobTrackr
         </div>
       </div>
 
-      <div className="auth-right">
-        <div className="auth-form-card">
-          <div className="auth-form-header">
-            <h2>Create your account</h2>
-            <p>Free forever — no credit card needed</p>
+      {/* Body */}
+      <div className="auth-body">
+        {/* Left */}
+        <div className="auth-left-content">
+          <h1>Land your<br /><span>dream job</span><br />faster.</h1>
+          <p>Join job seekers using JobTrackr to stay organised, confident, and ahead in their job search.</p>
+          <div className="auth-feature-list">
+            {[
+              'Free forever — no credit card needed',
+              'Track applications from any job board',
+              'AI cover letter tips for every role',
+              'Know your response rate and trends',
+            ].map((f, i) => (
+              <div key={i} className="auth-feature-item">
+                <div className="auth-feature-check">✓</div>
+                {f}
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* Right — form */}
+        <div className="auth-form-wrap">
+          <h2>Create account</h2>
+          <p className="auth-sub">Already have one? <Link to="/login">Sign in</Link></p>
+
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-group">
               <label htmlFor="name">Full name</label>
-              <input id="name" name="name" type="text" placeholder="Jamie Doe"
+              <input id="name" name="name" type="text"
+                placeholder="Jamie Doe"
                 value={form.name} onChange={handleChange}
-                className={errors.name ? 'input-error' : ''} autoComplete="name" />
+                className={errors.name ? 'input-error' : ''}
+                autoComplete="name" />
               {errors.name && <span className="field-error">{errors.name}</span>}
             </div>
             <div className="form-group">
               <label htmlFor="email">Email address</label>
-              <input id="email" name="email" type="email" placeholder="you@email.com"
+              <input id="email" name="email" type="email"
+                placeholder="you@email.com"
                 value={form.email} onChange={handleChange}
-                className={errors.email ? 'input-error' : ''} autoComplete="email" />
+                className={errors.email ? 'input-error' : ''}
+                autoComplete="email" />
               {errors.email && <span className="field-error">{errors.email}</span>}
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input id="password" name="password" type="password" placeholder="Min. 6 characters"
+              <input id="password" name="password" type="password"
+                placeholder="Min. 6 characters"
                 value={form.password} onChange={handleChange}
-                className={errors.password ? 'input-error' : ''} autoComplete="new-password" />
+                className={errors.password ? 'input-error' : ''}
+                autoComplete="new-password" />
               {form.password && (
                 <div className="password-strength">
-                  <div className="strength-bar"><div style={{ width: strength.width, background: strength.color }} /></div>
+                  <div className="strength-bar">
+                    <div style={{ width: strength.width, background: strength.color }} />
+                  </div>
                   <span style={{ color: strength.color }}>{strength.label}</span>
                 </div>
               )}
@@ -124,15 +133,18 @@ export default function Register() {
             </div>
             <div className="form-group">
               <label htmlFor="confirm">Confirm password</label>
-              <input id="confirm" name="confirm" type="password" placeholder="Repeat your password"
+              <input id="confirm" name="confirm" type="password"
+                placeholder="Repeat your password"
                 value={form.confirm} onChange={handleChange}
-                className={errors.confirm ? 'input-error' : ''} autoComplete="new-password" />
+                className={errors.confirm ? 'input-error' : ''}
+                autoComplete="new-password" />
               {errors.confirm && <span className="field-error">{errors.confirm}</span>}
             </div>
             <button type="submit" className="btn-auth" disabled={loading}>
-              {loading ? <span className="btn-spinner" /> : 'Create account'}
+              {loading ? <span className="btn-spinner" /> : 'Create account →'}
             </button>
           </form>
+
           <p className="auth-switch">
             Already have an account? <Link to="/login">Sign in</Link>
           </p>
